@@ -1,0 +1,22 @@
+# コメントアウトはハッシュタグ
+
+--formulae
+git
+python@3.8
+gcc@10
+vim
+exa
+bat
+fd
+sl
+
+--cask
+iterm2
+google-chrome
+slack
+visual-studio-code
+docker
+mendeley
+clipy
+spectacle
+skype
