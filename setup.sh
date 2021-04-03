@@ -32,16 +32,16 @@ if [ ${all_list[0]} != "--formulae" ]; then
     exit
 fi
 
-# --caskのスペルチェック
+# --casksのスペルチェック
 flag=0
 for ((idx=0; idx<${#all_list[@]}; idx++)); do
-    if [ ${all_list[$idx]} == "--cask" ]; then
+    if [ ${all_list[$idx]} == "--casks" ]; then
         flag=1
         break
     fi
 done
 if [ $flag -eq 0 ]; then
-    echo "'--cask' is NOT written. Exit."
+    echo "'--casks' is NOT written. Exit."
     exit
 fi
 
