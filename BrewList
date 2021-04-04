@@ -1,4 +1,4 @@
-# コメントアウトはハッシュタグ
+# The head of comment-out line is #
 
 --formulae
 git
