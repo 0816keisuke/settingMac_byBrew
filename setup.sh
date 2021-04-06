@@ -125,7 +125,7 @@ fi
 # ln -s path /usr/local/bin/gcc
 
 # Create Rust directory & install Rust
-while read -p "Do You install Rust? y/n: " yn; do
+while read -p "\\nDo You install Rust? y/n: " yn; do
     if [ $yn = "y" ]; then
         if  [ ! -d ~/rust ]; then
             mkdir ~/rust
@@ -146,7 +146,8 @@ if [ ! -d ~/.ssh ]; then
     chmod 755 ~
     mkdir ~/.ssh
     chmod 700 ~/.ssh
-    echo "Generate ssh-key RSA 4096-bit."
+    cd ~/.ssh
+    echo "\\nGenerate ssh-key RSA 4096-bit."
     ssh-keygen -b 4096 -t rsa
 fi
 
