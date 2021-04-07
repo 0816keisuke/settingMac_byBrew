@@ -89,6 +89,7 @@ if [ ! -e ~/.gitconfig ]; then
     touch ~/.gitconfig
 fi
 
+echo
 read -p "Enter your user name on Git: " git_user_name
 read -p "Enter your mail address on Git: " git_mail
 git config --global user.name $git_user_name
@@ -125,7 +126,8 @@ fi
 # ln -s path /usr/local/bin/gcc
 
 # Create Rust directory & install Rust
-while read -p "\\nDo You install Rust? y/n: " yn; do
+echo
+while read -p "Do You install Rust? y/n: " yn; do
     if [ $yn = "y" ]; then
         if  [ ! -d ~/rust ]; then
             mkdir ~/rust
@@ -151,4 +153,4 @@ if [ ! -d ~/.ssh ]; then
     ssh-keygen -b 4096 -t rsa
 fi
 
-echo "Setting Mac is DONE! Have a good Mac-life!!"
+echo "\\nSetting Mac is DONE! Have a good Mac-life!!"
