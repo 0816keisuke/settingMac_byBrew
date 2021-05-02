@@ -5,14 +5,14 @@ $ cd ~
 $ git clone https://github.com/0816keisuke/settingMac_byBrew.git
 $ cd settingMac_byBrew
 
-(Write down Homebrew formulae/casks to file BrewList)
+(Write down Homebrew formulae/casks to file "BrewList")
 
 $ sh setup.sh
 ```
 
 ## How to Write BrewList
 Write down Homebrew formulae/casks to file "BrewList."  
-The head of lists of formulae has to be "--formulae", and of casks has to be "--casks"  
+The head of formulae list has to be "--formulae", and of casks list has to be "--casks"  
 In this file, use hash-tag "#" if you want to comment out a line.  
   
 The following is an example of BrewList.  
