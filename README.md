@@ -1,4 +1,10 @@
 # README
+
+## Caution
+Before you use this repository, you are required to install Homebrew and create a path of "brew" command.  
+> Homebrew
+>> https://brew.sh
+
 ## How to Use
 ```
 $ cd ~
@@ -31,11 +37,6 @@ slack
 visual-studio-code
 # skype
 ```
-
-## Caution
-Before you use this repository, you are required to install Homebrew and create a path of "brew" command.  
-> Homebrew
->> https://brew.sh
 
 ## License
 The source code is licensed MIT.  
