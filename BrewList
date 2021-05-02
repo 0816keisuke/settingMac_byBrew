@@ -2,21 +2,28 @@
 
 --formulae
 git
-python@3.8
+python@3.9
+pipenv
 gcc@10
 vim
+docker
 exa
 bat
 fd
+ripgrep
 sl
 
 --casks
-iterm2
-google-chrome
-slack
-visual-studio-code
-docker
-mendeley
+1password
+adobe-acrobat-reader
 clipy
-spectacle
+deepl
+docker
+google-chrome
+iterm2
+mendeley
 skype
+slack
+spectacle
+visual-studio-code
+zoom
