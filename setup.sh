@@ -69,6 +69,8 @@ cask_list=(${cask_list[@]})
 # echo "formulae: ${formulae_list[@]}"
 # echo "    cask: ${cask_list[@]}"
 
+cd ~
+
 # Install formulae
 for formulae in ${formulae_list[@]}; do
     printf "\\nSearching $formulae... "
@@ -127,6 +129,7 @@ while read -p "\\nDo you generate RSA-key for SSH? y/n: " yn; do
         cd ~/.ssh
         echo "Generate ssh-key RSA 4096-bit."
         ssh-keygen -b 4096 -t rsa
+        cd ~
         break
     elif [ $yn = "n" ]; then
         echo "Don't generate RSA-key."
@@ -135,36 +138,6 @@ while read -p "\\nDo you generate RSA-key for SSH? y/n: " yn; do
         echo "Enter y or n."
     fi
 done
-
-# Create file .gitconfig
-if [ ! -e ~/.gitconfig ]; then
-    touch ~/.gitconfig
-fi
-
-# Set .gitconfig
-while read -p "Do you set .gitconfig? y/n: " yn; do
-    if [ $yn = "y" ]; then
-        echo
-        read -p "Enter your user name on Git: " git_user_name
-        read -p "Enter your mail address on Git: " git_mail
-        git config --global user.name $git_user_name
-        git config --global user.email $git_mail
-        break
-    elif [ $yn = "n" ]; then
-        echo "Don't set .gitconfig."
-        break
-    else
-        echo "Enter y or n."
-    fi
-done
-
-# .zshrc
-cp ./.zshrc ~/.zshrc
-
-# Create .vimrc
-if [ ! -e ~/.vimrc ]; then
-    touch ~/.vimrc
-fi
 
 # Create lab directory
 if [ ! -d ~/lab ]; then
@@ -205,5 +178,42 @@ while read -p "Do you install Rust? y/n: " yn; do
         echo "Enter y or n."
     fi
 done
+
+# Create file .gitconfig
+if [ ! -e ~/.gitconfig ]; then
+    touch ~/.gitconfig
+fi
+
+# Set .gitconfig
+while read -p "Do you set .gitconfig? y/n: " yn; do
+    if [ $yn = "y" ]; then
+        echo
+        read -p "Enter your user name on Git: " git_user_name
+        read -p "Enter your mail address on Git: " git_mail
+        git config --global user.name $git_user_name
+        git config --global user.email $git_mail
+        break
+    elif [ $yn = "n" ]; then
+        echo "Don't set .gitconfig."
+        break
+    else
+        echo "Enter y or n."
+    fi
+done
+
+# .zshrc
+if [ ! -e ~/.zshrc ]; then
+    touch ~/.zshrc
+fi
+
+# Create .vimrc
+if [ ! -e ~/.vimrc ]; then
+    touch ~/.vimrc
+fi
+
+# Clone my dot-files
+git clone https://github.com/0816keisuke/dot_files.git
+echo "\\nCloned repository of dot-files."
+echo "If you want to use cloned dot-files, move them to home directory."
 
 echo "\\nSetting Mac is DONE! Have a good Mac-life!!"
