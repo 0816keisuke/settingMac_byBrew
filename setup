@@ -1,0 +1,244 @@
+#!/bin/bash
+
+# Last Modified: 2022/04/01
+# Copyright (c) 2022 Keisuke Fukada (@0816keisuke)
+# This software is released under the MIT License, see LICENSE.
+
+# Terminate execution when an error is occured
+# set -e -o pipefail
+# trap 'echo "ERROR: line $LINENO, exit status = $?." >&2; exit 1' ERR
+
+if [ -z "$1" ]; then
+    TEST_MODE=false
+elif [ "$1" == "--test" ]; then
+    TEST_MODE=true
+else
+    echo "Invalid argument."
+    echo "Exit."
+    exit 1
+fi
+
+# Check Homebrew
+if ! which brew > /dev/null; then
+    echo "Command 'brew' NOT FOUND."
+    echo "Create path of 'brew' or install from the following URL."
+    echo "https://brew.sh"
+    echo "Exit."
+    exit 1
+fi
+
+# Read BrewList & delete blank line/comment-out & make BrewList array
+all_list=($(cat BrewList | grep -vE "^$|#"))
+
+# Check spelling of "--formulae"
+if [ "${all_list[0]}" != "--formulae" ]; then
+    echo "The text '--formulae' is NOT written."
+    echo "Exit."
+    exit 1
+fi
+
+# Check spelling of "--casks"
+flag=0
+for ((idx=0; idx<${#all_list[@]}; idx++)); do
+    if [ "${all_list[$idx]}" == "--casks" ]; then
+        flag=1
+        break
+    fi
+done
+if [ "${flag}" -eq 0 ]; then
+    echo "The text '--casks' is NOT written."
+    echo "Exit."
+    exit 1
+fi
+
+formulae_list=("${all_list[@]}")
+cask_list=("${all_list[@]}")
+
+# Make installing formulae list
+unset 'formulae_list[0]'
+for ((i="${idx}"; i<${#all_list[@]}; i++)); do
+    unset 'formulae_list["${i}"]'
+done
+formulae_list=("${formulae_list[@]}")
+
+# Make installing casks list
+for ((i=0; i<="${idx}"; i++)); do
+    unset 'cask_list["${i}"]'
+done
+cask_list=("${cask_list[@]}")
+
+# echo "     all: ${all_list[@]}"
+# echo "formulae: ${formulae_list[@]}"
+# echo "    cask: ${cask_list[@]}"
+
+# Move to home-directory
+cd ~ || exit 1
+
+# Install formulae
+for formulae in "${formulae_list[@]}"; do
+    printf "\\nSearching %s ... " "${formulae}"
+    brew search "${formulae}" > /dev/null 2>&1
+    if [ $? -eq 1 ]; then # If faile to find formulae
+        echo "We couldn't find '${formulae},' maybe '${formulae}' is spelled wrong."
+        NO_install_list+="${formulae} "
+    else # If find formulae
+        printf "OK\\n"
+        echo "Start to install ${formulae}..."
+        # Install formulae
+        if "${TEST_MODE}"; then
+            echo brew install "${formulae}"
+        else
+            brew install "${formulae}"
+        fi
+        if [ $? -eq 1 ]; then # If failed to install formulae
+            NO_install_list+="${formulae} "
+        fi
+    fi
+done
+
+# Install casks
+for cask in "${cask_list[@]}"; do
+    printf "\\nSearching %s ... " "${cask}"
+    brew search "${cask}" > /dev/null 2>&1
+    if [ $? -eq 1 ]; then # If failed to find cask
+        echo "We couldn't find '$cask,' maybe '$cask' is spelled wrong."
+        NO_install_list+="${cask} "
+    else # If find cask
+        printf "OK\\n"
+        echo "Start to install ${cask} ..."
+        # Install cask
+        if "${TEST_MODE}"; then
+            echo brew install "${cask}"
+        else
+            brew install "${cask}"
+        fi
+        if [ $? -eq 1 ]; then # If failed to install cask
+            NO_install_list+="${cask} "
+        fi
+    fi
+done
+
+# Output formulae/casks that could not be installed
+if [ -n "${NO_install_list}" ]; then
+    echo
+    echo "The following is a list of formulae/casks that could not be installed."
+    echo "===================="
+    for tmp in "${NO_install_list[@]}"; do
+        echo "${tmp}"
+    done
+    echo "===================="
+fi
+
+# SSH
+if [ ! -d ~/.ssh ]; then
+    chmod 755 ~
+    mkdir ~/.ssh
+    chmod 700 ~/.ssh
+fi
+echo
+while read -p "Do you generate RSA-key for SSH? y/n: " yn; do
+    if [ "${yn}" = "y" ]; then
+        cd ~/.ssh || exit 1
+        echo "Generate ssh-key RSA 4096-bit."
+        ssh-keygen -b 4096 -t rsa
+        cd ~ || exit 1
+        break
+    elif [ "${yn}" = "n" ]; then
+        echo "Don't generate RSA-key."
+        break
+    else
+        echo "Enter y or n."
+    fi
+done
+
+# Create lab directory
+if [ ! -d ~/lab ]; then
+    mkdir ~/lab
+fi
+
+# Create Python directory
+if [ ! -d ~/lang_python ]; then
+    mkdir ~/lang_python
+fi
+
+# Create C/C++ directory
+if [ ! -d ~/lang_c_cpp ]; then
+    mkdir ~/lang_c_cpp
+fi
+
+# ==================== ISSUE ====================
+# 2022/04/01 Macbookの種類(Intel/M1)によってbrewのパスが異なるのでそれらに対応する必要あり
+# Intel: /usr/local/bin
+# M1: /opt/homebrew
+# ==================== ISSUE ====================
+# cd /usr/local/bin || exit 1
+# unlink /usr/local/bin/gcc
+# path=$(find ../Cellar/gcc/*/bin -name "gcc-11")
+# ln -s path /usr/local/bin/gcc
+# unlink /usr/local/bin/g++
+# path=$(find ../Cellar/gcc/*/bin -name "g++-11")
+# ln -s path /usr/local/bin/gcc
+# cd ~ || exit 1
+
+# # Create Rust directory & install Rust
+# echo
+# while read -p "Do you install Rust? y/n: " yn; do
+#     if [ "${yn}" = "y" ]; then
+#         if  [ ! -d ~/rust ]; then
+#             mkdir ~/rust
+#         fi
+#         echo "Start to install Rust..."
+#         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+#         break
+#     elif [ "${yn}" = "n" ]; then
+#         echo "Don't install Rust."
+#         break
+#     else
+#         echo "Enter y or n."
+#     fi
+# done
+
+# Download dot-files
+echo
+cd ~ || exit 1
+git clone https://github.com/0816keisuke/dot-files.git
+
+# Copy and configure dot-files
+cp ~/dot-files/.gitconfig ~/.gitconfig
+cp -r ~/dot-files/.vim ~/.vim/
+cp ~/dot-files/.vimrc ~/.vimrc
+cp ~/dot-files/.zshrc ~/.zshrc
+printf "\\nConfigured dot-files.\\n"
+
+# Set .gitconfig
+echo
+while read -p "Do you set .gitconfig? y/n: " yn; do
+    if [ "${yn}" = "y" ]; then
+        echo
+        read -p "Enter your user name on Git: " git_user_name
+        read -p "Enter your mail address on Git: " git_mail
+        git config --global user.name "${git_user_name}"
+        git config --global user.email "${git_mail}"
+        break
+    elif [ "${yn}" = "n" ]; then
+        echo "Don't set .gitconfig."
+        break
+    else
+        echo "Enter y or n."
+    fi
+done
+
+# Install color-scheme of iTerm2 (iceberg)
+echo "Download color-scheme of iTerm2..."
+curl -o ~/Downloads/iceberg.itermcolors -O https://raw.githubusercontent.com/aseom/dotfiles/master/osx/iterm2/iceberg.itermcolors
+
+printf "\\n\033[31m%s\033[m\\n" "===================================="
+printf "\\n  <<< ! Setting Mac is DONE ! >>>\\n"
+printf "    "
+printf "\033[31m%s\033[m" "  HAVE "
+printf "\033[33m%s\033[m" "A "
+printf "\033[32m%s\033[m" "GOOD "
+printf "\033[34m%s\033[m" "MAC "
+printf "\033[35m%s\033[m" "LIFE"
+printf "\033[36m%s\033[m\\n\\n" " !!"
+printf "\033[31m%s\033[m\\n" "===================================="
