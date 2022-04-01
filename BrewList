@@ -1,10 +1,11 @@
-# The head of comment-out line is #
+# This is the comment-out line.
+# If you want to comment-out, please use "#"
 
 --formulae
 git
 python@3.9
 pipenv
-gcc@10
+gcc
 vim
 docker
 exa
@@ -22,7 +23,6 @@ docker
 google-chrome
 iterm2
 mendeley
-skype
 slack
 spectacle
 visual-studio-code
