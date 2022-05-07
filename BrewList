@@ -1,10 +1,9 @@
 # This is the comment-out line.
-# If you want to comment-out, please use "#"
+# If you want to comment-out a line, please use "#"
 
 --formulae
 git
 python@3.9
-pipenv
 gcc
 vim
 docker
