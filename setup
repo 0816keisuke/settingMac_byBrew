@@ -8,6 +8,7 @@
 # set -e -o pipefail
 # trap 'echo "ERROR: line $LINENO, exit status = $?." >&2; exit 1' ERR
 
+
 if [ -z "$1" ]; then
     TEST_MODE=false
 elif [ "$1" == "--test" ]; then
