@@ -6,6 +6,7 @@ git
 python@3.9
 gcc
 vim
+starship
 docker
 exa
 bat
@@ -14,7 +15,6 @@ ripgrep
 sl
 
 --casks
-1password
 adobe-acrobat-reader
 clipy
 deepl
