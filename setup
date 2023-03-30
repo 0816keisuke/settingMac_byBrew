@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Last Modified: 2022/04/01
-# Copyright (c) 2022 Keisuke Fukada (@0816keisuke)
+# Last Modified: 2023/03/30
+# Copyright (c) 2023 Keisuke Fukada (@0816keisuke)
 # This software is released under the MIT License, see LICENSE.
 
 # Terminate execution when an error is occured
@@ -54,14 +54,14 @@ fi
 formulae_list=("${all_list[@]}")
 cask_list=("${all_list[@]}")
 
-# Make installing formulae list
+# Make installed formulae list
 unset 'formulae_list[0]'
 for ((i="${idx}"; i<${#all_list[@]}; i++)); do
     unset 'formulae_list["${i}"]'
 done
 formulae_list=("${formulae_list[@]}")
 
-# Make installing casks list
+# Make installed casks list
 for ((i=0; i<="${idx}"; i++)); do
     unset 'cask_list["${i}"]'
 done
@@ -139,7 +139,7 @@ echo
 while read -p "Do you generate RSA-key for SSH? y/n: " yn; do
     if [ "${yn}" = "y" ]; then
         cd ~/.ssh || exit 1
-        echo "Generate ssh-key RSA 4096-bit."
+        echo "Generating ssh-key RSA 4096-bit."
         ssh-keygen -b 4096 -t rsa
         cd ~ || exit 1
         break
@@ -156,47 +156,10 @@ if [ ! -d ~/lab ]; then
     mkdir ~/lab
 fi
 
-# Create Python directory
-if [ ! -d ~/lang_python ]; then
-    mkdir ~/lang_python
+# Create config directory
+if [ ! -d ~/.config ]; then
+    mkdir ~/.config
 fi
-
-# Create C/C++ directory
-if [ ! -d ~/lang_c_cpp ]; then
-    mkdir ~/lang_c_cpp
-fi
-
-# ==================== ISSUE ====================
-# 2022/04/01 Macbookの種類(Intel/M1)によってbrewのパスが異なるのでそれらに対応する必要あり
-# Intel: /usr/local/bin
-# M1: /opt/homebrew
-# ==================== ISSUE ====================
-# cd /usr/local/bin || exit 1
-# unlink /usr/local/bin/gcc
-# path=$(find ../Cellar/gcc/*/bin -name "gcc-11")
-# ln -s path /usr/local/bin/gcc
-# unlink /usr/local/bin/g++
-# path=$(find ../Cellar/gcc/*/bin -name "g++-11")
-# ln -s path /usr/local/bin/gcc
-# cd ~ || exit 1
-
-# # Create Rust directory & install Rust
-# echo
-# while read -p "Do you install Rust? y/n: " yn; do
-#     if [ "${yn}" = "y" ]; then
-#         if  [ ! -d ~/rust ]; then
-#             mkdir ~/rust
-#         fi
-#         echo "Start to install Rust..."
-#         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-#         break
-#     elif [ "${yn}" = "n" ]; then
-#         echo "Don't install Rust."
-#         break
-#     else
-#         echo "Enter y or n."
-#     fi
-# done
 
 # Download dot-files
 echo
@@ -204,10 +167,7 @@ cd ~ || exit 1
 git clone https://github.com/0816keisuke/dot-files.git
 
 # Copy and configure dot-files
-cp ~/dot-files/.gitconfig ~/.gitconfig
-cp -r ~/dot-files/.vim ~/.vim/
-cp ~/dot-files/.vimrc ~/.vimrc
-cp ~/dot-files/.zshrc ~/.zshrc
+ln -s ~/dot-files/.zshrc ~/
 printf "\\nConfigured dot-files.\\n"
 
 # Set .gitconfig
